@@ -1,6 +1,18 @@
-@AuctionWebAPI_HostAddress = http://localhost:5016
+@BaseURL = http://localhost:5016/api
+@AccessToken = Y3Jpc3RpYW5vQGNyaXN0aWFuby5jb20=
 
-GET {{AuctionWebAPI_HostAddress}}/weatherforecast/
+###
+# @name getCurrentAuction
+GET {{BaseURL}}/auctions
 Accept: application/json
 
 ###
+# @name createOffer
+POST {{BaseURL}}/Offer/1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
+Accept: application/json
+
+{
+  "Price": 1200
+}
