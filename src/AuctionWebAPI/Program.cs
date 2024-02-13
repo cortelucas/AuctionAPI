@@ -1,6 +1,11 @@
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using AuctionWebAPI.Contracts;
 using AuctionWebAPI.Filters;
+using AuctionWebAPI.Repositories;
+using AuctionWebAPI.Repositories.DataAccess;
 using AuctionWebAPI.Services;
+using AuctionWebAPI.UseCases.Auctions.GetCurrent;
 using AuctionWebAPI.UseCases.Offers.CreateOffer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +47,17 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<AuthenticationUserAttribute>();
 builder.Services.AddScoped<LoggedUser>();
+builder.Services.AddScoped<ILoggedUser, LoggedUser>();
 builder.Services.AddScoped<CreateOfferUseCase>();
+builder.Services.AddScoped<GetCurrentAuctionUseCase>();
+builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddDbContext<AuctionWebAPIDbContext>(options =>
+{
+    options.UseSqlite(@"Data Source=/home/cortelucas/dev/github/rocketseat/AuctionAPI/auction.db");
+});
 
 builder.Services.AddHttpContextAccessor();
 

@@ -1,21 +1,17 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AuctionWebAPI.Entities;
 
 namespace AuctionWebAPI.Repositories
 {
     public class AuctionWebAPIDbContext : DbContext
     {
+        public AuctionWebAPIDbContext(DbContextOptions options) : base(options) { }
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Offer> Offers { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite(@"Data Source=/home/cortelucas/dev/github/rocketseat/AuctionAPI/auction.db");
-        }
     }
 }

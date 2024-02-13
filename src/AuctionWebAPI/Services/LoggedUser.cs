@@ -2,26 +2,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AuctionWebAPI.Contracts;
 using AuctionWebAPI.Entities;
 using AuctionWebAPI.Repositories;
 
 namespace AuctionWebAPI.Services
 {
-    public class LoggedUser
+    public class LoggedUser : ILoggedUser
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public LoggedUser(IHttpContextAccessor httpContext) 
+        private readonly IUserRepository _repository;
+        public LoggedUser(IHttpContextAccessor httpContext, IUserRepository repository) 
         {
             _httpContextAccessor = httpContext;
+            _repository = repository;
         }
         public User User()
         {
-            var repository = new AuctionWebAPIDbContext();
-
             var token = TokenOnRequest();
             var tokenDecoded = FromBase64String(token);
 
-            return repository.Users.First(user => user.Email.Equals(tokenDecoded));
+            return _repository.GetUserByEmail(tokenDecoded);
         }
 
         private string TokenOnRequest()

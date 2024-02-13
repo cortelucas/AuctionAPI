@@ -5,21 +5,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using AuctionWebAPI.Repositories;
+using AuctionWebAPI.Contracts;
 
 namespace AuctionWebAPI.Filters
 {
     public class AuthenticationUserAttribute : AuthorizeAttribute, IAuthorizationFilter
     {
+        private IUserRepository _repository;
+        public AuthenticationUserAttribute(IUserRepository repository) => _repository = repository;
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             try
             {
                 var token = TokenOnRequest(context.HttpContext);
-                var repository = new AuctionWebAPIDbContext();
                 var tokenDecoded = FromBase64String(token);
 
-                var exist = repository.Users.Any(user => user.Email.Equals(tokenDecoded));
+                var exist = _repository.ExistUserWithEmail(tokenDecoded);
 
                 if (exist == false)
                 {
@@ -28,7 +29,6 @@ namespace AuctionWebAPI.Filters
             }
             catch (Exception exception)
             {
-
                 context.Result = new UnauthorizedObjectResult(exception.Message);
             }
         }
