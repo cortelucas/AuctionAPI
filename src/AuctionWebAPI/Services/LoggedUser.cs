@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuctionWebAPI.Contracts;
 using AuctionWebAPI.Entities;
-using AuctionWebAPI.Repositories;
 
 namespace AuctionWebAPI.Services
 {
